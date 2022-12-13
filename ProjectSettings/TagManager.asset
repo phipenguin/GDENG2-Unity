@@ -4,10 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Cube
-  - Plane
-  - Sphere
-  - Capsule
+  - cube
+  - plane
+  - sphere
+  - capsule
   layers:
   - Default
   - TransparentFX

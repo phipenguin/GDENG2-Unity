@@ -13,7 +13,6 @@ public class JSONParser
         public Vector3 position;
         public Vector3 rotation;
         public Vector3 scale;
-        public bool rigidbody;
     }
 
     [System.Serializable]
@@ -39,69 +38,62 @@ public class JSONParser
 
         dataStructList = JsonUtility.FromJson<DataStructList>(parser);
 
+        //Insert primitives here
+        #region cubeStructList
         //Translating the cubes from our engine to Unity
 		foreach (DataStruct cubeStructData in dataStructList.cubeStructList)
 		{
 			GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             
             cube.name = cubeStructData.name;
-            cube.tag = "Cube";
+            cube.tag = "cube";
             cube.transform.position = cubeStructData.position;
             cube.transform.eulerAngles = new Vector3( cubeStructData.rotation.x, cubeStructData.rotation.y, cubeStructData.rotation.z);
 			cube.transform.localScale = cubeStructData.scale;
-            if (cubeStructData.rigidbody == true)
-			{
-                cube.AddComponent<Rigidbody>();
-            }
         }
+        #endregion
 
+        #region planeStructList
         //Translating the planes from our engine to Unity
         foreach (DataStruct planeStructData in dataStructList.planeStructList)
         {
             GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
 
             plane.name = planeStructData.name;
-            plane.tag = "Plane";
+            plane.tag = "plane";
             plane.transform.position = planeStructData.position;
             plane.transform.eulerAngles = new Vector3(planeStructData.rotation.x, planeStructData.rotation.y, planeStructData.rotation.z);
             plane.transform.localScale = planeStructData.scale;
-            if (planeStructData.rigidbody == true)
-            {
-                plane.AddComponent<Rigidbody>();
-            }
         }
-
+        #endregion
+        
+        #region sphereStructList
         //Translating the sphere from our engine to Unity
         foreach (DataStruct sphereStructData in dataStructList.sphereStructList)
         {
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
             sphere.name = sphereStructData.name;
-            sphere.tag = "Sphere";
+            sphere.tag = "sphere";
             sphere.transform.position = sphereStructData.position;
             sphere.transform.eulerAngles = new Vector3(sphereStructData.rotation.x, sphereStructData.rotation.y, sphereStructData.rotation.z);
             sphere.transform.localScale = sphereStructData.scale;
-            if (sphereStructData.rigidbody == true)
-            {
-                sphere.AddComponent<Rigidbody>();
-            }
         }
+        #endregion
 
+        #region capsuleStructList
         //Translating the capsules from our engine to Unity
         foreach (DataStruct capsuleStructData in dataStructList.capsuleStructList)
         {
             GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
             capsule.name = capsuleStructData.name;
-            capsule.tag = "Capsule";
+            capsule.tag = "capsule";
             capsule.transform.position = capsuleStructData.position;
             capsule.transform.eulerAngles = new Vector3(capsuleStructData.rotation.x, capsuleStructData.rotation.y, capsuleStructData.rotation.z);
             capsule.transform.localScale = capsuleStructData.scale;
-            if (capsuleStructData.rigidbody == true)
-            {
-                capsule.AddComponent<Rigidbody>();
-            }
         }
+        #endregion
         
         jsonReader.Close();
     }
@@ -109,19 +101,14 @@ public class JSONParser
     [MenuItem("File/Save Level")]
     static void writeToFile()
 	{
-        DataStructList myCubeDataStructList2 = new DataStructList();
+        DataStructList dataStructList = new DataStructList();
 
-        GameObject[] cubeList = GameObject.FindGameObjectsWithTag("Cube");
-        GameObject[] planeList = GameObject.FindGameObjectsWithTag("Plane");
-        GameObject[] sphereList = GameObject.FindGameObjectsWithTag("Sphere");
-        GameObject[] capsuleList = GameObject.FindGameObjectsWithTag("Capsule");
-
-        List<DataStruct> cubeStructDataList = new List<DataStruct>();
-        List<DataStruct> planeStructDataList = new List<DataStruct>();
-        List<DataStruct> sphereStructDataList = new List<DataStruct>();
-        List<DataStruct> capsuleStructDataList = new List<DataStruct>();
-
+        //Insert Primitives here
+        #region cubeList
         //Translating the cubes from Unity to our engine
+        GameObject[] cubeList = GameObject.FindGameObjectsWithTag("cube");
+        List<DataStruct> cubeStructDataList = new List<DataStruct>();
+
 		for (int i = 0; i < cubeList.Length; i++)
 		{
             DataStruct dataStruct = new DataStruct();
@@ -129,13 +116,19 @@ public class JSONParser
             dataStruct.name = cubeList[i].name;
             dataStruct.position = cubeList[i].transform.position;
             dataStruct.rotation = cubeList[i].transform.eulerAngles;
-            dataStruct.scale = cubeList[i].transform.localScale;
-            dataStruct.rigidbody = true;
+            dataStruct.scale = cubeList[i].transform.localScale / 2.0f;
 
             cubeStructDataList.Add(dataStruct);
 		}
 
+        dataStructList.cubeStructList = cubeStructDataList;
+        #endregion
+
+        #region planeList
         //Translating the planes from Unity to our engine
+        GameObject[] planeList = GameObject.FindGameObjectsWithTag("plane");
+        List<DataStruct> planeStructDataList = new List<DataStruct>();
+
         for (int i = 0; i < planeList.Length; i++)
         {
             DataStruct dataStruct = new DataStruct();
@@ -148,7 +141,14 @@ public class JSONParser
             planeStructDataList.Add(dataStruct);
         }
 
+        dataStructList.planeStructList = planeStructDataList;
+        #endregion
+
+        #region spereList
         //Translating the spheres from Unity to our engine
+        GameObject[] sphereList = GameObject.FindGameObjectsWithTag("sphere");
+        List<DataStruct> sphereStructDataList = new List<DataStruct>();
+
         for (int i = 0; i < sphereList.Length; i++)
         {
             DataStruct dataStruct = new DataStruct();
@@ -161,7 +161,14 @@ public class JSONParser
             sphereStructDataList.Add(dataStruct);
         }
 
+        dataStructList.sphereStructList = sphereStructDataList;
+        #endregion
+        
+        #region capsuleList
         //Translating the capsules from Unity to our engine
+        GameObject[] capsuleList = GameObject.FindGameObjectsWithTag("capsule");
+        List<DataStruct> capsuleStructDataList = new List<DataStruct>();
+
         for (int i = 0; i < capsuleList.Length; i++)
         {
             DataStruct dataStruct = new DataStruct();
@@ -174,12 +181,11 @@ public class JSONParser
             capsuleStructDataList.Add(dataStruct);
         }
 
-        myCubeDataStructList2.cubeStructList = cubeStructDataList;
-        myCubeDataStructList2.planeStructList = planeStructDataList;
-        myCubeDataStructList2.sphereStructList = sphereStructDataList;
-        myCubeDataStructList2.capsuleStructList = capsuleStructDataList;
+        dataStructList.capsuleStructList = capsuleStructDataList;
+        #endregion
 
-        string jsonParser = JsonUtility.ToJson(myCubeDataStructList2);
+        //TODO: Find a way to convert data struct into JSON
+        string jsonParser = JsonUtility.ToJson(dataStructList);
 		string path = "Assets/Scenes/Sample.level";
 		FileStream fileStream = new FileStream(path, FileMode.Create);
 
